@@ -8,7 +8,6 @@ Usage: $0 [options] <file>
 
 Options:
   -t <time>      Set time for file to expire (default: 1h | valid: 1h|12h|24h|72h).
-  -n <name>      Set custom name for the uploaded file.
 
 EOF
 }
@@ -26,12 +25,9 @@ upload() {
 
 set_args() {
     _EXPIRE_IN="1h"
-    _NAME=""
     while getopts "t:n:" opt; do
         case $opt in
             t)_EXPIRE_IN="$OPTARG"
-                ;;
-            n)_NAME="$OPTARG"
                 ;;
             \?)
                 echo "Invalid option: -$OPTARG" >&2
@@ -60,13 +56,7 @@ main() {
     set_command
 
     UPLOAD_LINK=$(upload "$FILE_TO_UPLOAD" "$_EXPIRE_IN")
-
-    if [ -z "$_NAME" ]; then
-        echo "File URL: $UPLOAD_LINK"
-    else
-        echo "File URL: ${UPLOAD_LINK%% *}$_NAME${UPLOAD_LINK#* }"
-    fi
-
+    echo "File URL: $UPLOAD_LINK"
 }
 
 main "$@"
